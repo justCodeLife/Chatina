@@ -1,0 +1,572 @@
+swagger: '2.0'
+info:
+  version: '2.0'
+  title: VIANNA_CHAT
+  description: |-
+    # Introduction
+    VIANNA CHAT API
+
+    # Authentication
+    POWERED BY JSON WEB TOKEN
+
+    # HTTP Error Codes
+    Success : 200
+    Bad Request : 400
+    Not Authenticated : 401
+    Not Authorized : 403
+    Not Found : 404
+    Server Internal Error : 500
+
+    # Rate limit
+    100 Rps
+  contact: { }
+host: 'chat.viannacloud.ir:3000'
+basePath: /api
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /login:
+    post:
+      summary: Login
+      tags:
+        - Auth
+      operationId: Login
+      deprecated: false
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: username
+          in: formData
+          required: true
+          type: string
+          description: ''
+        - name: password
+          in: formData
+          required: true
+          type: string
+          description: ''
+      responses:
+        '1':
+          description: 'token'
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: token=*; Path=/; HttpOnly; Secure;
+        '-1':
+          description: 'نام کاربری یا رمز عبور نامعتبر است'
+        '-2':
+          description: 'ورود با خطا مواجه شد'
+  /logout:
+    post:
+      summary: Logout
+      tags:
+        - Auth
+      operationId: Logout
+      deprecated: false
+      produces:
+        - application/json
+      parameters: [ ]
+      responses:
+        '1':
+          description: ''
+  /run_chat:
+    post:
+      summary: RunChat
+      tags:
+        - RunChat
+      operationId: RunChat
+      deprecated: false
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: name
+          in: formData
+          required: false
+          type: string
+          description: ''
+        - name: username
+          in: formData
+          required: true
+          type: string
+          description: ''
+        - name: password
+          in: formData
+          required: true
+          type: string
+          description: ''
+        - name: branch_code
+          in: formData
+          required: true
+          type: string
+          description: ''
+        - name: role
+          in: formData
+          required: true
+          type: integer
+          format: int32
+          description: 1 for user and 2 for admin
+        - name: room_slug
+          in: formData
+          required: true
+          type: string
+          description: ''
+        - name: room_title
+          in: formData
+          required: true
+          type: string
+          description: ''
+        - name: voice_length_limit
+          in: formData
+          required: false
+          type: integer
+          format: int32
+          description: ''
+      responses:
+        '1':
+          description: 'کاربر با موفقیت افزوده شد'
+        '-1':
+          description: 'لطفا نام کاربری را وارد نمایید'
+        '-2':
+          description: 'تعداد حروف نام کاربری باید بین 4 تا 30 حرف باشد'
+        '-3':
+          description: 'لطفا رمز عبور را وارد نمایید'
+        '-4':
+          description: 'تعداد رقم های رمز عبور باید بین 4 تا 30 رقم باشد'
+        '-5':
+          description: 'لطفا کد شاخه را وارد نمایید'
+        '-6':
+          description: 'لطفا نقش را وارد نمایید'
+        '-7':
+          description: 'نقش معتبر نمی باشد'
+        '-8':
+          description: 'لطفا عنوان فارسی اتاق را وارد نمایید'
+        '-9':
+          description: 'محدودیت صدا نامعتبر می باشد'
+        '-10':
+          description: 'لطفا عنوان انگلیسی اتاق را وارد نمایید'
+        '-11':
+          description: 'عملیات با خطا مواجه شد'
+  /users:
+    post:
+      summary: AddUser
+      tags:
+        - Users
+      operationId: AddUser
+      deprecated: false
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: name
+          in: formData
+          required: false
+          type: string
+          description: ''
+        - name: username
+          in: formData
+          required: true
+          type: string
+          description: ''
+        - name: password
+          in: formData
+          required: true
+          type: string
+          description: ''
+        - name: branch_code
+          in: formData
+          required: false
+          type: string
+          description: ''
+        - name: role
+          in: formData
+          required: true
+          type: integer
+          format: int32
+          description: 1 for user and 2 for admin
+        - name: room_slug
+          in: formData
+          required: false
+          type: array - string
+          description: array of room slugs or single room slug
+      responses:
+        '1':
+          description: 'کاربر با موفقیت افزوده شد'
+        '-1':
+          description: 'لطفا نام کاربری را وارد نمایید'
+        '-2':
+          description: 'تعداد حروف نام کاربری باید بین 4 تا 30 حرف باشد'
+        '-3':
+          description: 'لطفا رمز عبور را وارد نمایید'
+        '-4':
+          description: 'تعداد رقم های رمز عبور باید بین 4 تا 30 رقم باشد'
+        '-5':
+          description: 'لطفا نقش را وارد نمایید'
+        '-6':
+          description: 'نقش معتبر نمی باشد'
+        '-7':
+          description: 'نام کاربری از قبل وجود دارد'
+        '-8':
+          description: 'افزودن کاربر با خطا مواجه شد'
+    delete:
+      summary: DeleteUser
+      tags:
+        - Users
+      operationId: DeleteUser
+      deprecated: false
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: 'username'
+          items: { }
+          in: formData
+          required: true
+          type: array - string
+          description: array of user usernames or single user username
+      responses:
+        '1':
+          description: 'حذف کاربر یا کاربران با موفقیت انجام شد'
+        '-1':
+          description: 'حذف کاربر یا کاربران با خطا مواجه شد'
+        '-2':
+          description: 'یک یا چند مورد از کاربران یافت نشدند'
+        '-3':
+          description: 'لطفا نام کاربری را وارد نمایید'
+    put:
+      summary: EditUser
+      tags:
+        - Users
+      operationId: EditUser
+      deprecated: false
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: name
+          in: formData
+          required: false
+          type: string
+          description: ''
+        - name: username
+          in: formData
+          required: true
+          type: string
+          description: ''
+        - name: password
+          in: formData
+          required: false
+          type: string
+          description: ''
+        - name: branch_code
+          in: formData
+          required: false
+          type: string
+          description: ''
+        - name: role
+          in: formData
+          required: false
+          type: integer
+          format: int32
+          description: 1 for user and 2 for admin
+        - name: room_slug
+          in: formData
+          required: false
+          type: array - string
+          description: array of room slugs or single room slug
+      responses:
+        '1':
+          description: 'ویرایش کاربر با موفقیت انجام شد'
+        '-1':
+          description: 'لطفا نام کاربری را وارد نمایید'
+        '-2':
+          description: 'تعداد حروف نام کاربری باید بین 4 تا 30 حرف باشد'
+        '-3':
+          description: 'تعداد رقم های رمز عبور باید بین 4 تا 30 رقم باشد'
+        '-4':
+          description: 'نقش معتبر نمی باشد'
+        '-5':
+          description: 'نام کاربری از قبل وجود دارد'
+        '-6':
+          description: 'ویرایش کاربر با خطا مواجه شد'
+  /rooms:
+    post:
+      summary: AddRoom
+      tags:
+        - Rooms
+      operationId: AddRoom
+      deprecated: false
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: title
+          in: formData
+          required: true
+          type: string
+          description: ''
+        - name: slug
+          in: formData
+          required: true
+          type: string
+          description: ''
+        - name: branch_code
+          in: formData
+          required: false
+          type: string
+          description: ''
+        - name: voice_length_limit
+          in: formData
+          required: false
+          type: integer
+          format: int32
+          description: ''
+        - name: users_username
+          in: formData
+          required: false
+          type: array - string
+          description: array of users username or single user username
+      responses:
+        '1':
+          description: 'اتاق با موفقیت افزوده شد'
+        '-1':
+          description: 'لطفا عنوان فارسی را وارد نمایید'
+        '-2':
+          description: 'لطفا عنوان انگلیسی را وارد نمایید'
+        '-3':
+          description: 'محدودیت صدا نامعتبر می باشد'
+        '-4':
+          description: 'عنوان فارسی از قبل وجود دارد'
+        '-5':
+          description: 'عنوان انگلیسی از قبل وجود دارد'
+        '-6':
+          description: 'افزودن اتاق با خطا مواجه شد'
+    delete:
+      summary: DeleteRoom
+      tags:
+        - Rooms
+      operationId: DeleteRoom
+      deprecated: false
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: slug
+          in: formData
+          required: true
+          type: array - string
+          description: array of room slugs or single room slug
+      responses:
+        '1':
+          description: 'حذف اتاق یا اتاق ها با موفقیت انجام شد'
+        '-1':
+          description: 'حذف اتاق یا اتاق ها با خطا مواجه شد'
+        '-2':
+          description: 'لطفا عنوان انگلیسی اتاق را وارد نمایید'
+    put:
+      summary: EditRoom
+      tags:
+        - Rooms
+      operationId: EditRoom
+      deprecated: false
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: title
+          in: formData
+          required: false
+          type: string
+          description: ''
+        - name: slug
+          in: formData
+          required: true
+          type: string
+          description: ''
+        - name: branch_code
+          in: formData
+          required: false
+          type: string
+          description: ''
+        - name: voice_length_limit
+          in: formData
+          required: false
+          type: integer
+          description: 'In second'
+        - name: users_username
+          in: formData
+          required: false
+          type: array - string
+          description: array of users username or single user username
+      responses:
+        '1':
+          description: 'اتاق با موفقیت ویرایش شد'
+        '-1':
+          description: 'لطفا عنوان انگلیسی را وارد نمایید'
+        '-2':
+          description: 'محدودیت صدا نامعتبر می باشد'
+        '-3':
+          description: 'عنوان فارسی از قبل وجود دارد'
+        '-4':
+          description: 'عنوان انگلیسی از قبل وجود دارد'
+        '-5':
+          description: 'ویرایش اتاق با خطا مواجه شد'
+  /rooms/users:
+    post:
+      summary: GetRoomUsers
+      tags:
+        - Rooms
+      operationId: GetRoomUsers
+      deprecated: false
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: slug
+          in: formData
+          required: true
+          type: string
+          description: ''
+      responses:
+        '1':
+          description: ''
+        '-1':
+          description: 'اتاق یافت نشد'
+        '-2':
+          description: 'عنوان انگلیسی اتاق نامعتبر می باشد'
+        '-3':
+          description: 'دریافت اطلاعات با خطا مواجه شد'
+  /users/rooms:
+    post:
+      summary: GetUserRooms
+      tags:
+        - Users
+      operationId: GetUserRooms
+      deprecated: false
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: username
+          in: formData
+          required: true
+          type: string
+          description: ''
+      responses:
+        '1':
+          description: ''
+        '-1':
+          description: 'کاربر مورد نظر یافت نشد'
+        '-2':
+          description: 'نام کاربری نامعتبر می باشد'
+        '-3':
+          description: 'دریافت اتاق های کاربر با خطا مواجه شد'
+  /users/add_to_room:
+    post:
+      summary: AddUserToRoom
+      tags:
+        - Users
+      operationId: AddUserToRoom
+      deprecated: false
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: username
+          in: formData
+          required: true
+          type: string
+          description: ''
+        - name: room_slug
+          in: formData
+          required: true
+          type: string
+          description: ''
+      responses:
+        '1':
+          description: 'کاربر با موفقیت به اتاق اضافه شد'
+        '-1':
+          description: 'لطفا نام کاربری را وارد نمایید'
+        '-2':
+          description: 'لطفا عنوان انگلیسی اتاق را وارد نمایید'
+        '-3':
+          description: 'افزودن کاربر به اتاق با خطا مواجه شد'
+  /users/remove_from_room:
+    post:
+      summary: RemoveUserFromRoom
+      tags:
+        - Users
+      operationId: RemoveUserFromRoom
+      deprecated: false
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: username
+          in: formData
+          required: true
+          type: string
+          description: ''
+        - name: room_slug
+          in: formData
+          required: true
+          type: string
+          description: ''
+      responses:
+        '1':
+          description: 'کاربر با موفقیت از اتاق حذف شد'
+        '-1':
+          description: 'لطفا نام کاربری را وارد نمایید'
+        '-2':
+          description: 'لطفا عنوان انگلیسی اتاق را وارد نمایید'
+        '-3':
+          description: 'حذف کاربر از اتاق با خطا مواجه شد'
+  /branches:
+    delete:
+      summary: DeleteBranch
+      tags:
+        - Branches
+      operationId: DeleteBranch
+      deprecated: false
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: 'code'
+          items: { }
+          in: formData
+          required: true
+          type: array - string
+          description: array of branch code or single branch code
+      responses:
+        '1':
+          description: 'حذف شاخه یا شاخه ها با موفقیت انجام شد'
+        '-1':
+          description: 'حذف شاخه یا شاخه ها با خطا مواجه شد'
+        '-2':
+          description: 'لطفا کد شاخه را وارد نمایید'
+tags:
+  - name: Auth
+  - name: RunChat
+  - name: Users
+  - name: Rooms
+  - name: Branches

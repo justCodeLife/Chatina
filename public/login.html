@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>ورود</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js"></script>
+</head>
+<body>
+<script>
+    const query = new URLSearchParams(window.location.search)
+    const username = query.get('username');
+    const password = query.get('password');
+    const room = query.get('room');
+    if (!username || !password) {
+        alert('Pass username and pass and room with query string, Example : http://localhost?username=admin&password=123456&room=test')
+    }
+    const api = axios.create({baseURL: '/api', withCredentials: true, timeout: 10000})
+    api.post('/login', {
+        username, password
+    }).then((res) => {
+        if (res.data.error) {
+            alert(res.data.error)
+        } else {
+            alert('ورود با موفقیت انجام شد')
+        }
+        window.location.href = `/?room=${room}`
+    }).catch(err => {
+        console.log(err)
+        alert('ورود با خطا مواجه شد')
+    })
+</script>
+</body>
+</html>
