@@ -130,6 +130,7 @@ module.exports = {
     async room_users(req, res) {
         try {
             if (req.body.slug) {
+                //get room users
                 const users = await Room.findOne({slug: req.body.slug}).populate('users')
                 if (users) {
                     return res.status(200).json({status: 1, users})
@@ -159,10 +160,6 @@ module.exports = {
                 messages = messages.map(m => m._id)
             }
 
-
-            console.log(messages)
-
-
             return res.status(200).json(messages).end();
         } catch (e) {
             console.log(e);
@@ -174,6 +171,7 @@ module.exports = {
             if (!req.file) {
                 return res.status(400).json({error: "فایل نامعتبر است"});
             } else {
+                //file is uploading by multer middleware
                 return res.json({
                     success: 'فایل با موفقیت آپلود شد',
                     path: req.file.path,

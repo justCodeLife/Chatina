@@ -44,9 +44,9 @@ app.use('/', express.static('public'))
 //for reverse proxy
 // app.set('trust proxy', 'loopback');
 //-------------------------------ROUTES------------------------------------
-app.get('/doc', (req, res) => {
-    res.sendFile(__dirname + '/public/doc/doc.html')
-})
+// app.get('/doc', (req, res) => {
+//     res.sendFile(__dirname + '/public/doc/doc.html')
+// })
 app.use('/api', require('./routes/api'));
 app.get('/', protect, (req, res) => {
     if (req.user.role === 2) {

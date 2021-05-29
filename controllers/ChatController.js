@@ -95,6 +95,7 @@ module.exports = {
                 if (err.keyValue.slug) {
                     room = await Room.findOne({slug: data.room_slug})
                     if (!room.users.includes(user._id)) {
+                        //add user id to room users
                         room.users = [...room.users, user._id]
                         await room.save()
                     }
@@ -124,6 +125,7 @@ module.exports = {
 
         try {
             if (!user.rooms.includes(room._id)) {
+                //add room id to user rooms
                 user.rooms = [...user.rooms, room._id]
                 await user.save()
             }

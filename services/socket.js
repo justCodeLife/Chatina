@@ -14,6 +14,7 @@ module.exports = (io) => {
         socket.room = socket.handshake.query.room;
         try {
             let user;
+            //get user rooms
             const usr = await User.findOne({username: socket.username}).populate('rooms')
             socket.name = usr.name;
             if (usr && usr.rooms.some(r => r.slug === socket.room)) {
@@ -30,6 +31,7 @@ module.exports = (io) => {
                     user = users.find(u => u.username === socket.username)
                     socket.to(socket.room).emit('addJoinedUserElement', {user})
                 } else {
+                    //user already joined in room
                     if (user.rooms && user.rooms.includes(socket.room)) {
                         socket.disconnect()
                     } else {
@@ -37,6 +39,7 @@ module.exports = (io) => {
                     }
                 }
                 if (usr.role === 2) {
+                    //user is admin and should get online users list
                     const room_users = users.filter(usr => usr.rooms.includes(socket.room))
                     socket.emit('roomOnlineUsers', room_users)
                 }
@@ -48,14 +51,17 @@ module.exports = (io) => {
         }
         socket.on('disconnect', async () => {
             try {
+                //remove user from online users list
                 const index = users.findIndex(t => t.username === socket.username)
-                const user = users[index];
+                const user = users[index]
                 if (users.length > 0 && user && user.rooms && user.rooms.includes(socket.room)) {
                     socket.to(socket.room).emit('deleteRemovedUserElement', {user_id: user.user_id})
                 }
+                //remove user from room
                 if (user?.rooms && user.rooms.length > 1) {
                     user.rooms = user.rooms.filter(r => r !== socket.room)
                 } else {
+                    //remove user from online users list
                     users.splice(index, 1)
                 }
             } catch (e) {
@@ -194,6 +200,7 @@ module.exports = (io) => {
                     file_path: `/${r?.branch_code}/${file_ext}/${file_title}.${file_ext}`,
                     created_at: Date.now(),
                 }).then(msg => {
+                    //send to room
                     socket.to(r?.slug).emit('file', {
                         id: msg._id,
                         user: socket.user_id,
@@ -207,6 +214,7 @@ module.exports = (io) => {
                         name: socket.name,
                         element_id
                     })
+                    //send to sender
                     socket.emit('file', {
                         is_sender: true,
                         id: msg._id,
